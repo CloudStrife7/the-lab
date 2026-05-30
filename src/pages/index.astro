@@ -156,6 +156,39 @@
     }
     h1 .accent { color: var(--accent-dim); }
 
+    .glitch-word { position: relative; display: inline-block; }
+    .glitch-word::after {
+      content: 'GHOST';
+      position: absolute;
+      left: 0; top: 50%;
+      transform: translateY(-50%);
+      font-family: 'VT323', monospace;
+      font-size: 1.3em;
+      color: var(--text-bright);
+      pointer-events: none;
+      opacity: 0;
+      animation: ghostswitch 5s steps(1) infinite;
+    }
+    @keyframes ghostswitch {
+      0%   { opacity: 0; }
+      7%   { opacity: 1; }
+      11%  { opacity: 0; }
+      12%  { opacity: 1; }
+      14%  { opacity: 0; }
+      42%  { opacity: 0; }
+      45%  { opacity: 1; }
+      48%  { opacity: 0; }
+      69%  { opacity: 0; }
+      71%  { opacity: 1; }
+      72%  { opacity: 0; }
+      73%  { opacity: 1; }
+      75%  { opacity: 0; }
+      91%  { opacity: 0; }
+      94%  { opacity: 1; }
+      97%  { opacity: 0; }
+      100% { opacity: 0; }
+    }
+
     .layer-bar-wrap { margin: 20px 0; }
     .layer-meta { display: flex; justify-content: space-between; font-size: 10px; color: var(--accent-dim); letter-spacing: 0.08em; margin-bottom: 5px; }
     .layer-bar { height: 6px; background: var(--border-frame); border-radius: 2px; overflow: hidden; }
@@ -235,7 +268,7 @@
         <div class="plate-content">
           <div class="print-header">
             <div class="path-line">C:\<span>PRINT_LAB</span>\HOME.TXT</div>
-            <h1>THE GHOST IN <span class="accent">THE MACHINE</span></h1>
+            <h1>THE <span class="glitch-word">GHOST</span> IN <span class="accent">THE MACHINE</span></h1>
           </div>
 
           <div class="layer-bar-wrap">
