@@ -40,20 +40,6 @@
       cursor: crosshair;
     }
 
-    body::before {
-      content: '';
-      position: fixed; inset: 0;
-      background: repeating-linear-gradient(
-        0deg,
-        var(--scan-line) 0px,
-        var(--scan-line) 1px,
-        transparent 1px,
-        transparent 3px
-      );
-      pointer-events: none;
-      z-index: 9999;
-      animation: scanroll 8s linear infinite;
-    }
     @keyframes scanroll {
       from { background-position: 0 0; }
       to   { background-position: 0 120px; }
@@ -87,6 +73,27 @@
     }
     .enclosure::before { left: 14px; }
     .enclosure::after  { right: 14px; }
+
+    .enc-rail,
+    .enc-side,
+    .enc-footer { position: relative; }
+
+    .enc-rail::before,
+    .enc-side::before,
+    .enc-footer::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: repeating-linear-gradient(
+        0deg,
+        var(--scan-line) 0px,
+        var(--scan-line) 1px,
+        transparent 1px,
+        transparent 3px
+      );
+      pointer-events: none;
+      z-index: 2;
+      animation: scanroll 8s linear infinite;
+    }
 
     .enc-rail {
       display: flex; align-items: center; justify-content: space-between;
