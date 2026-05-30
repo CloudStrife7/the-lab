@@ -159,39 +159,14 @@
     }
     h1 .accent { color: var(--accent-dim); }
 
-    .glitch-word { position: relative; display: inline-block; overflow: hidden; }
-    .glitch-word::after {
-      content: 'GHOST';
-      position: absolute;
-      left: 50%; top: 50%;
-      transform: translate(-50%, -50%);
-      white-space: nowrap;
-      font-family: 'VT323', monospace;
-      font-size: 1.35em;
-      color: var(--accent-teal);
-      pointer-events: none;
-      opacity: 0;
-      animation: ghostswitch 5s steps(1) infinite;
-    }
-    @keyframes ghostswitch {
-      0%   { opacity: 0; }
-      7%   { opacity: 1; }
-      11%  { opacity: 0; }
-      12%  { opacity: 1; }
-      14%  { opacity: 0; }
-      42%  { opacity: 0; }
-      45%  { opacity: 1; }
-      48%  { opacity: 0; }
-      69%  { opacity: 0; }
-      71%  { opacity: 1; }
-      72%  { opacity: 0; }
-      73%  { opacity: 1; }
-      75%  { opacity: 0; }
-      91%  { opacity: 0; }
-      94%  { opacity: 1; }
-      97%  { opacity: 0; }
-      100% { opacity: 0; }
-    }
+    .stream-wrap { margin-bottom: 24px; border: 1px solid var(--border-frame); border-radius: 4px; overflow: hidden; }
+    .stream-header { background: var(--bg-panel); padding: 8px 14px; display: flex; align-items: center; gap: 12px; font-size: 10px; letter-spacing: 0.1em; border-bottom: 1px solid var(--border-frame); }
+    .stream-live { display: flex; align-items: center; gap: 5px; color: #d05050; font-weight: bold; letter-spacing: 0.15em; }
+    .stream-dot { width: 7px; height: 7px; border-radius: 50%; background: #d05050; box-shadow: 0 0 6px #d05050; animation: blink 1.2s step-end infinite; }
+    .stream-title { color: var(--text-primary); flex: 1; }
+    .stream-viewers { color: var(--accent-dim); }
+    .stream-screen { background: #000; display: flex; justify-content: center; }
+    .stream-gif { width: 100%; display: block; }
 
     .layer-bar-wrap { margin: 20px 0; }
     .layer-meta { display: flex; justify-content: space-between; font-size: 10px; color: var(--accent-dim); letter-spacing: 0.08em; margin-bottom: 5px; }
@@ -272,7 +247,7 @@
         <div class="plate-content">
           <div class="print-header">
             <div class="path-line">C:\<span>PRINT_LAB</span>\HOME.TXT</div>
-            <h1>THE <span class="glitch-word">GHOST</span> IN <span class="accent">THE MACHINE</span></h1>
+            <h1>THE GHOST IN <span class="accent">THE MACHINE</span></h1>
           </div>
 
           <div class="layer-bar-wrap">
@@ -331,6 +306,18 @@
               <div class="tier-name">NEW MACHINE</div>
               <div class="tier-amount">ANY</div>
               <div class="tier-desc">Goes straight into the fund for a second printer. Hall of fame status.</div>
+            </div>
+          </div>
+
+          <div class="section-label">// LIVE STREAM</div>
+          <div class="stream-wrap">
+            <div class="stream-header">
+              <span class="stream-live"><span class="stream-dot"></span>LIVE</span>
+              <span class="stream-title">P1S // PRINT SESSION</span>
+              <span class="stream-viewers" id="viewers">-- watching</span>
+            </div>
+            <div class="stream-screen">
+              <img src="/the-lab/stream.gif" alt="Live print stream" class="stream-gif" />
             </div>
           </div>
 
@@ -396,6 +383,17 @@
       }, 2500 / target);
     }, 400);
   });
+
+  (function() {
+    const el = document.getElementById('viewers');
+    let count = Math.floor(Math.random() * 180) + 40;
+    el.textContent = count + ' watching';
+    setInterval(() => {
+      count += Math.floor(Math.random() * 7) - 3;
+      count = Math.max(20, count);
+      el.textContent = count + ' watching';
+    }, 8000);
+  })();
 
   const messages = ['loading filament profile... OK', 'calibrating build plate... OK', 'homing XYZ axes... OK', 'ready to print.'];
   let mi = 0, ci = 0;
