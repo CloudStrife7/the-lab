@@ -1,0 +1,362 @@
+---
+// src/pages/index.astro
+---
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ZACH'S PRINT LAB // P1S SUPPORT</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=VT323&family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg-deep:       #0a0c0e;
+      --bg-enclosure:  #111418;
+      --bg-panel:      #161b20;
+      --bg-plate:      #0d1117;
+      --border-frame:  #2a3540;
+      --border-glow:   #00ffe0;
+      --accent-cyan:   #00ffe0;
+      --accent-amber:  #ffb347;
+      --accent-red:    #ff4e4e;
+      --accent-green:  #39ff14;
+      --text-primary:  #d0e8e0;
+      --text-dim:      #556b72;
+      --text-bright:   #ffffff;
+      --plate-grid:    rgba(0,255,224,0.04);
+      --scan-line:     rgba(0,0,0,0.18);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg-deep);
+      color: var(--text-primary);
+      font-family: 'Share Tech Mono', monospace;
+      min-height: 100vh;
+      overflow-x: hidden;
+      cursor: crosshair;
+    }
+
+    body::before {
+      content: '';
+      position: fixed; inset: 0;
+      background: repeating-linear-gradient(
+        0deg,
+        var(--scan-line) 0px,
+        var(--scan-line) 1px,
+        transparent 1px,
+        transparent 3px
+      );
+      pointer-events: none;
+      z-index: 9999;
+      animation: scanroll 8s linear infinite;
+    }
+    @keyframes scanroll {
+      from { background-position: 0 0; }
+      to   { background-position: 0 120px; }
+    }
+
+    .page-wrapper { max-width: 960px; margin: 0 auto; padding: 24px 16px 60px; }
+
+    .status-bar {
+      display: flex; justify-content: space-between; align-items: center;
+      font-size: 11px; color: var(--text-dim);
+      border-bottom: 1px solid var(--border-frame);
+      padding-bottom: 8px; margin-bottom: 20px; letter-spacing: 0.1em;
+    }
+    .status-bar .dot {
+      display: inline-block; width: 7px; height: 7px; border-radius: 50%;
+      background: var(--accent-green); margin-right: 6px;
+      animation: blink 1.4s step-end infinite;
+    }
+    @keyframes blink { 50% { opacity: 0; } }
+
+    .enclosure {
+      background: var(--bg-enclosure);
+      border: 2px solid var(--border-frame);
+      border-radius: 6px;
+      box-shadow: 0 0 0 1px #0a0c0e, 0 0 40px rgba(0,255,224,0.06), inset 0 1px 0 rgba(255,255,255,0.04);
+      position: relative; overflow: hidden;
+    }
+    .enclosure::before, .enclosure::after {
+      content: '◈'; position: absolute; top: 10px;
+      font-size: 14px; color: var(--border-frame);
+    }
+    .enclosure::before { left: 14px; }
+    .enclosure::after  { right: 14px; }
+
+    .enc-rail {
+      display: flex; align-items: center; justify-content: space-between;
+      background: var(--bg-panel); border-bottom: 1px solid var(--border-frame);
+      padding: 10px 40px; gap: 12px;
+    }
+    .enc-rail .machine-id {
+      font-family: 'Orbitron', monospace; font-size: 13px; font-weight: 700;
+      color: var(--accent-cyan); letter-spacing: 0.15em;
+      text-shadow: 0 0 12px var(--accent-cyan);
+    }
+    .enc-rail .rail-right { display: flex; align-items: center; gap: 16px; font-size: 10px; color: var(--text-dim); letter-spacing: 0.08em; }
+    .enc-rail .indicator { display: flex; align-items: center; gap: 5px; }
+    .enc-rail .led { width: 8px; height: 8px; border-radius: 50%; }
+    .led-green  { background: var(--accent-green);  box-shadow: 0 0 6px var(--accent-green); }
+    .led-amber  { background: var(--accent-amber);  box-shadow: 0 0 6px var(--accent-amber); animation: blink 2s step-end infinite; }
+    .led-cyan   { background: var(--accent-cyan);   box-shadow: 0 0 6px var(--accent-cyan); }
+
+    .enc-body { display: grid; grid-template-columns: 48px 1fr 48px; min-height: 560px; }
+
+    .enc-side {
+      background: var(--bg-panel); display: flex; flex-direction: column;
+      align-items: center; justify-content: center; gap: 24px; padding: 20px 0;
+    }
+    .enc-side.left  { border-right: 1px solid var(--border-frame); }
+    .enc-side.right { border-left:  1px solid var(--border-frame); }
+    .side-label { writing-mode: vertical-rl; font-size: 9px; letter-spacing: 0.2em; color: var(--text-dim); text-transform: uppercase; }
+    .side-screw { width: 10px; height: 10px; border: 1px solid var(--border-frame); border-radius: 50%; position: relative; }
+    .side-screw::after { content: ''; position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%) rotate(45deg); width: 6px; height: 1px; background: var(--border-frame); }
+
+    .build-plate { background: var(--bg-plate); padding: 28px 32px 36px; position: relative; overflow: hidden; }
+    .build-plate::before {
+      content: ''; position: absolute; inset: 0;
+      background-image: linear-gradient(var(--plate-grid) 1px, transparent 1px), linear-gradient(90deg, var(--plate-grid) 1px, transparent 1px);
+      background-size: 24px 24px; pointer-events: none;
+    }
+
+    .plate-corner { position: absolute; width: 16px; height: 16px; border-color: var(--accent-cyan); opacity: 0.5; }
+    .plate-corner.tl { top: 8px; left: 8px; border-top: 1px solid; border-left: 1px solid; }
+    .plate-corner.tr { top: 8px; right: 8px; border-top: 1px solid; border-right: 1px solid; }
+    .plate-corner.bl { bottom: 8px; left: 8px; border-bottom: 1px solid; border-left: 1px solid; }
+    .plate-corner.br { bottom: 8px; right: 8px; border-bottom: 1px solid; border-right: 1px solid; }
+
+    .plate-content { position: relative; z-index: 1; }
+
+    .print-header { margin-bottom: 28px; border-bottom: 1px solid var(--border-frame); padding-bottom: 20px; }
+    .path-line { font-size: 10px; color: var(--text-dim); letter-spacing: 0.1em; margin-bottom: 8px; }
+    .path-line span { color: var(--accent-cyan); }
+    h1 { font-family: 'Orbitron', monospace; font-size: clamp(22px, 4vw, 34px); font-weight: 900; color: var(--text-bright); letter-spacing: 0.06em; line-height: 1.1; text-shadow: 0 0 20px rgba(0,255,224,0.3); margin-bottom: 6px; }
+    h1 .accent { color: var(--accent-cyan); }
+    .sub-title { font-size: 12px; color: var(--text-dim); letter-spacing: 0.12em; }
+
+    .layer-bar-wrap { margin: 20px 0; }
+    .layer-meta { display: flex; justify-content: space-between; font-size: 10px; color: var(--text-dim); letter-spacing: 0.08em; margin-bottom: 5px; }
+    .layer-bar { height: 6px; background: var(--border-frame); border-radius: 2px; overflow: hidden; }
+    .layer-fill { height: 100%; width: 0%; background: linear-gradient(90deg, var(--accent-cyan), var(--accent-green)); border-radius: 2px; box-shadow: 0 0 8px var(--accent-cyan); transition: width 2.5s ease; }
+
+    .section-label { font-size: 10px; letter-spacing: 0.18em; color: var(--accent-cyan); text-transform: uppercase; margin-bottom: 10px; display: flex; align-items: center; gap: 8px; }
+    .section-label::after { content: ''; flex: 1; height: 1px; background: var(--border-frame); }
+
+    .info-block { background: rgba(0,255,224,0.03); border: 1px solid var(--border-frame); border-left: 3px solid var(--accent-cyan); padding: 16px 18px; margin-bottom: 20px; font-size: 13px; line-height: 1.75; color: var(--text-primary); border-radius: 0 3px 3px 0; }
+    .info-block p + p { margin-top: 10px; }
+    .info-block strong { color: var(--accent-amber); }
+
+    .cost-table { width: 100%; border-collapse: collapse; font-size: 12px; margin-bottom: 20px; }
+    .cost-table th { text-align: left; font-size: 10px; letter-spacing: 0.14em; color: var(--text-dim); padding: 6px 10px; border-bottom: 1px solid var(--border-frame); }
+    .cost-table td { padding: 8px 10px; border-bottom: 1px solid rgba(42,53,64,0.5); color: var(--text-primary); }
+    .cost-table tr:hover td { background: rgba(0,255,224,0.03); }
+    .cost-table .val { text-align: right; color: var(--accent-amber); font-variant-numeric: tabular-nums; }
+    .cost-table .row-total td { border-top: 1px solid var(--border-frame); color: var(--accent-cyan); font-weight: bold; font-size: 13px; }
+
+    .tiers { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 14px; margin-bottom: 24px; }
+    .tier-card { background: var(--bg-panel); border: 1px solid var(--border-frame); border-radius: 4px; padding: 16px 14px; transition: border-color 0.2s, box-shadow 0.2s, transform 0.15s; cursor: default; }
+    .tier-card:hover { border-color: var(--accent-cyan); box-shadow: 0 0 16px rgba(0,255,224,0.12); transform: translateY(-2px); }
+    .tier-card.featured { border-color: var(--accent-amber); box-shadow: 0 0 14px rgba(255,179,71,0.1); }
+    .tier-icon { font-size: 22px; margin-bottom: 8px; }
+    .tier-name { font-family: 'Orbitron', monospace; font-size: 11px; font-weight: 700; letter-spacing: 0.12em; color: var(--text-bright); margin-bottom: 4px; }
+    .tier-amount { font-family: 'VT323', monospace; font-size: 26px; color: var(--accent-cyan); line-height: 1; margin-bottom: 8px; }
+    .tier-card.featured .tier-amount { color: var(--accent-amber); }
+    .tier-desc { font-size: 10px; color: var(--text-dim); line-height: 1.6; }
+
+    .cta-wrap { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; margin-top: 10px; }
+    .btn-support { font-family: 'Orbitron', monospace; font-size: 12px; font-weight: 700; letter-spacing: 0.15em; color: var(--bg-deep); background: var(--accent-cyan); border: none; padding: 12px 28px; border-radius: 3px; cursor: pointer; text-decoration: none; display: inline-flex; align-items: center; gap: 8px; box-shadow: 0 0 20px rgba(0,255,224,0.3); transition: box-shadow 0.2s, transform 0.15s; }
+    .btn-support:hover { box-shadow: 0 0 36px rgba(0,255,224,0.55); transform: translateY(-1px); }
+    .btn-note { font-size: 10px; color: var(--text-dim); letter-spacing: 0.08em; line-height: 1.7; }
+
+    .enc-footer { background: var(--bg-panel); border-top: 1px solid var(--border-frame); padding: 10px 40px; display: flex; justify-content: space-between; align-items: center; font-size: 10px; color: var(--text-dim); letter-spacing: 0.1em; gap: 12px; flex-wrap: wrap; }
+    .enc-footer .temp-readout { color: var(--accent-amber); font-variant-numeric: tabular-nums; }
+
+    .terminal-line { font-size: 11px; color: var(--text-dim); margin-top: 6px; min-height: 16px; }
+    .terminal-line .cursor { display: inline-block; width: 7px; height: 13px; background: var(--accent-cyan); margin-left: 2px; animation: blink 0.8s step-end infinite; vertical-align: middle; }
+
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: var(--bg-deep); }
+    ::-webkit-scrollbar-thumb { background: var(--border-frame); border-radius: 3px; }
+    ::-webkit-scrollbar-thumb:hover { background: var(--accent-cyan); }
+  </style>
+</head>
+<body>
+<div class="page-wrapper">
+  <div class="status-bar">
+    <span><span class="dot"></span>BAMBU_P1S // ONLINE // ENCLOSURE_TEMP: <span id="encTemp" style="color:var(--accent-amber)">--</span>&deg;C</span>
+    <span id="clock">--:--:--</span>
+  </div>
+
+  <div class="enclosure">
+    <div class="enc-rail">
+      <span class="machine-id">ZACH'S PRINT LAB</span>
+      <div class="rail-right">
+        <div class="indicator"><span class="led led-green"></span>PRINTER</div>
+        <div class="indicator"><span class="led led-amber"></span>AMS</div>
+        <div class="indicator"><span class="led led-cyan"></span>NET</div>
+      </div>
+    </div>
+
+    <div class="enc-body">
+      <div class="enc-side left">
+        <div class="side-screw"></div>
+        <span class="side-label">P1S // ENCLOSURE</span>
+        <span class="side-label">ZACH-LABS-V1</span>
+        <div class="side-screw"></div>
+      </div>
+
+      <div class="build-plate">
+        <div class="plate-corner tl"></div>
+        <div class="plate-corner tr"></div>
+        <div class="plate-corner bl"></div>
+        <div class="plate-corner br"></div>
+
+        <div class="plate-content">
+          <div class="print-header">
+            <div class="path-line">C:\<span>PRINT_LAB</span>\HOME.TXT</div>
+            <h1>SUPPORT<br /><span class="accent">THE LAB</span></h1>
+            <div class="sub-title">// HOBBY-FUNDED 3D PRINTING // NOT A BUSINESS //</div>
+          </div>
+
+          <div class="layer-bar-wrap">
+            <div class="layer-meta">
+              <span>NEXT PRINTER FUND</span>
+              <span id="pct">0%</span>
+            </div>
+            <div class="layer-bar">
+              <div class="layer-fill" id="layerFill"></div>
+            </div>
+          </div>
+
+          <div class="section-label">// MISSION STATEMENT</div>
+          <div class="info-block">
+            <p>Hey &mdash; I'm Zach. I love 3D printing and making things for people. <strong>This isn't a business.</strong> It's a hobby I want to keep growing.</p>
+            <p>If you enjoy what I make and want to keep the printer running, donations help cover filament costs, maintenance, electricity, and eventually a second machine. Every little bit helps.</p>
+            <p><strong>Donations are completely voluntary.</strong> There's no expectation attached &mdash; I'll help people regardless. If you do chip in, I'll prioritize your requests when I can.</p>
+          </div>
+
+          <div class="section-label">// WHERE IT GOES</div>
+          <table class="cost-table">
+            <thead>
+              <tr><th>LINE ITEM</th><th>DETAILS</th><th class="val">EST / MO</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>🧵 Filament</td><td>PLA, PETG, TPU spools</td><td class="val">~$25</td></tr>
+              <tr><td>🔧 Maintenance</td><td>Nozzles, belts, lubrication</td><td class="val">~$10</td></tr>
+              <tr><td>⚡ Electricity</td><td>Print hours &times; power draw</td><td class="val">~$5</td></tr>
+              <tr><td>💾 Design tools</td><td>Slicer plugins, assets</td><td class="val">~$5</td></tr>
+              <tr class="row-total"><td colspan="2">TOTAL MONTHLY OVERHEAD</td><td class="val">~$45</td></tr>
+            </tbody>
+          </table>
+
+          <div class="section-label">// SUPPORT TIERS</div>
+          <div class="tiers">
+            <div class="tier-card">
+              <div class="tier-icon">🧲</div>
+              <div class="tier-name">FIRST LAYER</div>
+              <div class="tier-amount">$5</div>
+              <div class="tier-desc">Covers a spool's worth of electricity. Just vibes. Much appreciated.</div>
+            </div>
+            <div class="tier-card featured">
+              <div class="tier-icon">🔩</div>
+              <div class="tier-name">BUILD PLATE</div>
+              <div class="tier-amount">$15</div>
+              <div class="tier-desc">Helps grab a partial spool. Priority queue on your next print request.</div>
+            </div>
+            <div class="tier-card">
+              <div class="tier-icon">🖨️</div>
+              <div class="tier-name">FULL SPOOL</div>
+              <div class="tier-amount">$25</div>
+              <div class="tier-desc">One full spool of filament. You're basically fueling a print run directly.</div>
+            </div>
+            <div class="tier-card">
+              <div class="tier-icon">⚙️</div>
+              <div class="tier-name">NEW MACHINE</div>
+              <div class="tier-amount">ANY</div>
+              <div class="tier-desc">Goes straight into the fund for a second printer. Hall of fame status.</div>
+            </div>
+          </div>
+
+          <div class="section-label">// SUPPORT LINK</div>
+          <div class="cta-wrap">
+            <a class="btn-support" href="https://ko-fi.com" target="_blank" rel="noopener">
+              &#9654; SUPPORT ON KO-FI
+            </a>
+            <div class="btn-note">
+              Payments handled securely via Ko-fi.<br />
+              No account required. One-time or recurring.
+            </div>
+          </div>
+
+          <div class="terminal-line" id="termLine">
+            C:\PRINT_LAB&gt; <span class="cursor"></span>
+          </div>
+        </div>
+      </div>
+
+      <div class="enc-side right">
+        <div class="side-screw"></div>
+        <span class="side-label">BAMBU // P1S</span>
+        <span class="side-label">AMS // UNIT-1</span>
+        <div class="side-screw"></div>
+      </div>
+    </div>
+
+    <div class="enc-footer">
+      <span>FIRMWARE: DEV-MODE // MQTT: ACTIVE</span>
+      <span>NOZZLE: <span class="temp-readout" id="nozzleTemp">--</span>&deg;C &nbsp;|&nbsp; BED: <span class="temp-readout" id="bedTemp">--</span>&deg;C</span>
+      <span>&copy; ZACH'S PRINT LAB</span>
+    </div>
+  </div>
+</div>
+
+<script>
+  function tick() {
+    const now = new Date();
+    document.getElementById('clock').textContent = now.toTimeString().slice(0,8);
+  }
+  tick(); setInterval(tick, 1000);
+
+  function randRange(min, max) { return (Math.random() * (max - min) + min).toFixed(1); }
+  function updateTemps() {
+    document.getElementById('encTemp').textContent    = randRange(28,34);
+    document.getElementById('nozzleTemp').textContent = randRange(195,215);
+    document.getElementById('bedTemp').textContent    = randRange(58,62);
+  }
+  updateTemps(); setInterval(updateTemps, 4000);
+
+  window.addEventListener('load', () => {
+    setTimeout(() => {
+      const fill = document.getElementById('layerFill');
+      const pct  = document.getElementById('pct');
+      const target = 34;
+      fill.style.width = target + '%';
+      let cur = 0;
+      const step = setInterval(() => {
+        if (cur >= target) { clearInterval(step); return; }
+        cur++;
+        pct.textContent = cur + '%';
+      }, 2500 / target);
+    }, 400);
+  });
+
+  const messages = ['loading filament profile... OK', 'calibrating build plate... OK', 'homing XYZ axes... OK', 'ready to print.'];
+  let mi = 0, ci = 0;
+  const termEl = document.getElementById('termLine');
+  function typeNext() {
+    if (mi >= messages.length) { termEl.innerHTML = 'C:\\PRINT_LAB&gt; READY <span class="cursor"></span>'; return; }
+    const msg = messages[mi];
+    if (ci < msg.length) {
+      termEl.innerHTML = 'C:\\PRINT_LAB&gt; ' + msg.slice(0, ++ci) + '<span class="cursor"></span>';
+      setTimeout(typeNext, 38);
+    } else { mi++; ci = 0; setTimeout(typeNext, 900); }
+  }
+  setTimeout(typeNext, 1800);
+</script>
+</body>
+</html>
