@@ -164,7 +164,6 @@
     .stream-live { display: flex; align-items: center; gap: 5px; color: #d05050; font-weight: bold; letter-spacing: 0.15em; }
     .stream-dot { width: 7px; height: 7px; border-radius: 50%; background: #d05050; box-shadow: 0 0 6px #d05050; animation: blink 1.2s step-end infinite; }
     .stream-title { color: var(--text-primary); flex: 1; }
-    .stream-viewers { color: var(--accent-dim); }
     .stream-screen { background: #000; display: flex; justify-content: center; }
     .stream-gif { width: 100%; display: block; }
 
@@ -314,7 +313,6 @@
             <div class="stream-header">
               <span class="stream-live"><span class="stream-dot"></span>LIVE</span>
               <span class="stream-title">P1S // PRINT SESSION</span>
-              <span class="stream-viewers" id="viewers">-- watching</span>
             </div>
             <div class="stream-screen">
               <img src="/the-lab/stream.gif" alt="Live print stream" class="stream-gif" />
@@ -383,17 +381,6 @@
       }, 2500 / target);
     }, 400);
   });
-
-  (function() {
-    const el = document.getElementById('viewers');
-    let count = Math.floor(Math.random() * 180) + 40;
-    el.textContent = count + ' watching';
-    setInterval(() => {
-      count += Math.floor(Math.random() * 7) - 3;
-      count = Math.max(20, count);
-      el.textContent = count + ' watching';
-    }, 8000);
-  })();
 
   const messages = ['loading filament profile... OK', 'calibrating build plate... OK', 'homing XYZ axes... OK', 'ready to print.'];
   let mi = 0, ci = 0;
