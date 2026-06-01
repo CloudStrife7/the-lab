@@ -11,20 +11,20 @@
   <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=VT323&family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet" />
   <style>
     :root {
-      --bg-deep:       #0a0c0e;
-      --bg-enclosure:  #111418;
-      --bg-panel:      #161b20;
-      --bg-plate:      #0d1117;
-      --border-frame:  #2a3540;
-      --accent-teal:   #00ffe0;
-      --accent-amber:  #ffb347;
-      --accent-green:  #39ff14;
-      --accent-dim:    #a8a8c0;
-      --accent-ghost:  #787888;
-      --text-primary:  #d0e8e0;
-      --text-dim:      #556b72;
+      --bg-deep:       #080807;
+      --bg-enclosure:  #111110;
+      --bg-panel:      #1a1815;
+      --bg-plate:      #0d0c0a;
+      --border-frame:  #2e2218;
+      --accent-teal:   #ff6600;
+      --accent-amber:  #ff9940;
+      --accent-green:  #52c878;
+      --accent-dim:    #a09070;
+      --accent-ghost:  #706050;
+      --text-primary:  #e0d4c0;
+      --text-dim:      #5a4a38;
       --text-bright:   #ffffff;
-      --plate-grid:    rgba(0,255,224,0.04);
+      --plate-grid:    rgba(255,102,0,0.10);
       --scan-line:     rgba(0,0,0,0.18);
     }
 
@@ -65,7 +65,7 @@
       background: var(--bg-enclosure);
       border: 1px solid var(--border-frame);
       border-radius: 6px;
-      box-shadow: 0 0 0 1px var(--bg-deep), 0 0 40px rgba(0,255,224,0.06), inset 0 1px 0 rgba(255,255,255,0.04);
+      box-shadow: 0 0 0 1px var(--bg-deep), 0 0 40px rgba(255,102,0,0.06), inset 0 1px 0 rgba(255,255,255,0.04);
       position: relative; overflow: hidden;
     }
     .enclosure::before, .enclosure::after {
@@ -152,7 +152,7 @@
       line-height: 1.1;
       white-space: nowrap;
       margin-bottom: 6px;
-      text-shadow: 0 0 20px rgba(0,255,224,0.3);
+      text-shadow: 0 0 20px rgba(255,102,0,0.3);
     }
     h1 .accent { color: var(--accent-teal); }
 
@@ -167,25 +167,25 @@
     .layer-bar-wrap { margin: 20px 0; }
     .layer-meta { display: flex; justify-content: space-between; font-size: 10px; color: var(--accent-dim); letter-spacing: 0.08em; margin-bottom: 5px; }
     .layer-bar { height: 6px; background: var(--border-frame); border-radius: 2px; overflow: hidden; }
-    .layer-fill { height: 100%; width: 0%; background: linear-gradient(90deg, var(--accent-teal), var(--accent-green)); border-radius: 2px; box-shadow: 0 0 8px var(--accent-teal); transition: width 2.5s ease; }
+    .layer-fill { height: 100%; width: 0%; background: linear-gradient(90deg, var(--accent-teal), var(--accent-amber)); border-radius: 2px; box-shadow: 0 0 8px var(--accent-teal); transition: width 2.5s ease; }
 
     .section-label { font-size: 10px; letter-spacing: 0.18em; color: var(--accent-teal); text-transform: uppercase; margin-bottom: 10px; display: flex; align-items: center; gap: 8px; }
     .section-label::after { content: ''; flex: 1; height: 1px; background: var(--border-frame); }
 
-    .info-block { background: rgba(0,255,224,0.03); border: 1px solid var(--border-frame); border-left: 3px solid var(--accent-teal); padding: 16px 18px; margin-bottom: 20px; font-size: 13px; line-height: 1.85; color: var(--text-primary); border-radius: 0 3px 3px 0; }
+    .info-block { background: rgba(255,102,0,0.03); border: 1px solid var(--border-frame); border-left: 3px solid var(--accent-teal); padding: 16px 18px; margin-bottom: 20px; font-size: 16px; line-height: 1.85; color: var(--text-primary); border-radius: 0 3px 3px 0; }
     .info-block p + p { margin-top: 10px; }
 
     .cost-table { width: 100%; border-collapse: collapse; font-size: 12px; margin-bottom: 20px; }
     .cost-table th { text-align: left; font-size: 10px; letter-spacing: 0.14em; color: var(--accent-dim); padding: 6px 10px; border-bottom: 1px solid var(--border-frame); }
     .cost-table td { padding: 8px 10px; border-bottom: 1px solid rgba(32,32,36,0.8); color: var(--text-primary); }
-    .cost-table tr:hover td { background: rgba(0,255,224,0.03); }
+    .cost-table tr:hover td { background: rgba(255,102,0,0.03); }
     .cost-table .val { text-align: right; color: var(--accent-amber); font-variant-numeric: tabular-nums; }
     .cost-table .row-total td { border-top: 1px solid var(--border-frame); color: var(--accent-teal); font-weight: bold; font-size: 13px; }
 
     .tiers { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 14px; margin-bottom: 24px; }
     .tier-card { background: var(--bg-panel); border: 1px solid var(--border-frame); border-radius: 4px; padding: 16px 14px; transition: border-color 0.3s, box-shadow 0.3s, transform 0.2s; cursor: default; }
-    .tier-card:hover { border-color: var(--accent-teal); box-shadow: 0 0 16px rgba(0,255,224,0.12); transform: translateY(-2px); }
-    .tier-card.featured { border-color: var(--accent-amber); box-shadow: 0 0 14px rgba(255,179,71,0.1); }
+    .tier-card:hover { border-color: var(--accent-teal); box-shadow: 0 0 16px rgba(255,102,0,0.14); transform: translateY(-2px); }
+    .tier-card.featured { border-color: var(--accent-amber); box-shadow: 0 0 14px rgba(255,102,0,0.18); }
     .tier-icon { font-size: 22px; margin-bottom: 8px; opacity: 0.75; }
     .tier-name { font-family: 'Orbitron', monospace; font-size: 11px; font-weight: 700; letter-spacing: 0.12em; color: var(--text-bright); margin-bottom: 4px; }
     .tier-amount { font-family: 'VT323', monospace; font-size: 28px; color: var(--accent-teal); line-height: 1; margin-bottom: 8px; }
@@ -193,8 +193,8 @@
     .tier-desc { font-size: 10px; color: var(--text-primary); line-height: 1.6; }
 
     .cta-wrap { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; margin-top: 10px; }
-    .btn-support { font-family: 'Orbitron', monospace; font-size: 12px; font-weight: 700; letter-spacing: 0.15em; color: var(--bg-deep); background: var(--accent-teal); border: none; padding: 12px 28px; border-radius: 3px; cursor: pointer; text-decoration: none; display: inline-flex; align-items: center; gap: 8px; box-shadow: 0 0 20px rgba(0,255,224,0.3); transition: box-shadow 0.2s, transform 0.15s; }
-    .btn-support:hover { box-shadow: 0 0 36px rgba(0,255,224,0.55); transform: translateY(-1px); }
+    .btn-support { font-family: 'Orbitron', monospace; font-size: 12px; font-weight: 700; letter-spacing: 0.15em; color: var(--bg-deep); background: var(--accent-teal); border: none; padding: 12px 28px; border-radius: 3px; cursor: pointer; text-decoration: none; display: inline-flex; align-items: center; gap: 8px; box-shadow: 0 0 20px rgba(255,102,0,0.4); transition: box-shadow 0.2s, transform 0.15s; }
+    .btn-support:hover { box-shadow: 0 0 36px rgba(255,102,0,0.65); transform: translateY(-1px); }
     .btn-note { font-size: 10px; color: var(--accent-dim); letter-spacing: 0.08em; line-height: 1.7; }
 
     .enc-footer { background: var(--bg-panel); border-top: 1px solid var(--border-frame); padding: 10px 40px; display: flex; justify-content: space-between; align-items: center; font-size: 10px; color: var(--text-dim); letter-spacing: 0.1em; gap: 12px; flex-wrap: wrap; }
@@ -305,18 +305,7 @@
             </div>
           </div>
 
-          <div class="section-label">// LIVE STREAM</div>
-          <div class="stream-wrap">
-            <div class="stream-header">
-              <span class="stream-live"><span class="stream-dot"></span>LIVE</span>
-              <span class="stream-title">P1S // PRINT SESSION</span>
-            </div>
-            <div class="stream-screen">
-              <img src="/the-lab/stream.gif" alt="Live print stream" class="stream-gif" />
-            </div>
-          </div>
-
-          <div class="section-label">// MAKERWORLD</div>
+<div class="section-label">// MAKERWORLD</div>
           <div class="cta-wrap">
             <a class="btn-support" href="https://makerworld.com/en/@tehpwnage" target="_blank" rel="noopener">
               &#9654; VIEW ON MAKERWORLD
